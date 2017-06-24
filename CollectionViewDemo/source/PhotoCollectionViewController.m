@@ -8,7 +8,6 @@
 
 #import "PhotoCollectionViewController.h"
 #import "PhotoCollectionViewCell.h"
-#import "PhotoDetailViewController.h"
 #import "ImageDataProvider.h"
 #import "RHParallaxScroller.h"
 #import "RHGridCollectionView.h"
@@ -258,6 +257,7 @@
     }
 }
 
+/*
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:PhotoDetailViewController.class])
@@ -269,6 +269,8 @@
         details.currentImage = indexPath.item;
     }
 }
+ */
+
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self updateParallaxScrolling];
