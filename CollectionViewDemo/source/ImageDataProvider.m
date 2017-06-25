@@ -422,6 +422,12 @@
     }
 }
 
+- (void) removeAllImages
+{
+    [super removeAllImages];
+    [self.downloadedImageURLs removeAllObjects];
+}
+
 - (UIImage*) imageAtIndex:(NSUInteger)i
 {
     // we shouldn't access the disk in this method because

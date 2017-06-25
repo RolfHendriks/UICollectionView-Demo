@@ -21,7 +21,7 @@
     if (normalizedScroll > 1) normalizedScroll = 1;
     else if (normalizedScroll < 0) normalizedScroll = 0;
     
-    CGFloat imageY =  maximumParallax * ( 2*normalizedScroll - 1 ); // ranging from -maximumParallax to +maximumParallax
+    CGFloat imageY =  -2 * maximumParallax * normalizedScroll; // ranging from - 2*maximumParallax = maximum upshift to 0 = maximum downshift
     
     contentView.frame = CGRectMake( 0, imageY, superview.bounds.size.width, superview.bounds.size.height + 2 * maximumParallax );
 }
