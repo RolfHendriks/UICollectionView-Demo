@@ -113,6 +113,17 @@
     [self setNeedsUpdate];
 }
 
+- (void) setShouldMaintainPreferredAspectRatio:(BOOL)shouldMaintainPreferredAspectRatio
+{
+    if (_shouldMaintainPreferredAspectRatio != shouldMaintainPreferredAspectRatio)
+    {
+        _shouldMaintainPreferredAspectRatio = shouldMaintainPreferredAspectRatio;
+        if ( self.shouldExpandCells )
+        {
+            [self setNeedsUpdate];
+        }
+    }
+}
 - (CGSize) actualCellSize
 {
     if (self.shouldExpandCells)
