@@ -1,7 +1,7 @@
 # UICollectionView-Demo
 
 <!-- <img src="CollectionViewDemo/extras/video-full.gif" alt="CollectionView Demo"> -->
-<video alt="CollectionView Demo" mute autoplay loop>
+<video alt="CollectionView Demo" controls>
 <source src="CollectionViewDemo/extras/video-full.mp4" type="video/mp4" />
 Your browser does not support the HTML video tag
 </video>
