@@ -1,6 +1,10 @@
 # UICollectionView-Demo
 
-<img src="CollectionViewDemo/extras/video-full.gif" alt="CollectionView Demo">
+<!-- <img src="CollectionViewDemo/extras/video-full.gif" alt="CollectionView Demo"> -->
+<video alt="CollectionView Demo" mute autoplay loop>
+<source src="CollectionViewDemo/extras/video-full.mp4" type="video/mp4" />
+Your browser does not support the HTML video tag
+</video>
 
 ## Overview
 This is an advanced UICollectionView demo featuring a custom list layout and flexible grid layout. It demonstrates a wide variety of basic through advanced iOS techniques through a visually rich photo browsing demo. This project is intended as a tech demo to demonstrate iOS development techniques.
