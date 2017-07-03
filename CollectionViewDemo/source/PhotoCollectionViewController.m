@@ -12,6 +12,8 @@
 #import "RHParallaxScroller.h"
 #import "RHGridCollectionView.h"
 
+#define kPhotoFolder @"Photos"
+
 #define kImageProviderMaximumDelay 2    // maximum simulated network delay
 
 #define kImageHighlightScale 1.05
@@ -55,7 +57,7 @@
 
 - (NSString*) photoFolder
 {
-    return [[NSBundle mainBundle] pathForResource:@"Photos-Nature" ofType:nil];
+    return [[NSBundle mainBundle] pathForResource:kPhotoFolder ofType:nil];
 }
 
 - (void) commonInit

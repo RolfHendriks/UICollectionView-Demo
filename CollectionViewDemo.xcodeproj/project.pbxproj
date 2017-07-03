@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E08613C1F09A2EC00B28E1B /* Photos in Resources */ = {isa = PBXBuildFile; fileRef = 7E08613B1F09A2EC00B28E1B /* Photos */; };
 		7E1E6C8A1EF41BDD00BE87C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E1E6C891EF41BDD00BE87C6 /* main.m */; };
 		7E1E6C931EF41BDD00BE87C6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E1E6C911EF41BDD00BE87C6 /* Main.storyboard */; };
 		7E1E6C981EF41BDD00BE87C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E1E6C961EF41BDD00BE87C6 /* LaunchScreen.storyboard */; };
@@ -25,10 +26,10 @@
 		7EA587F21EFEDD5700F11942 /* RHImageFader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA587E51EFEDD5700F11942 /* RHImageFader.m */; };
 		7EA587F31EFEDD5700F11942 /* RHParallaxScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA587E71EFEDD5700F11942 /* RHParallaxScroller.m */; };
 		7EA587F91EFEDDD100F11942 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7EA587F71EFEDDD100F11942 /* Assets.xcassets */; };
-		7EA587FA1EFEDDD100F11942 /* Photos-Nature in Resources */ = {isa = PBXBuildFile; fileRef = 7EA587F81EFEDDD100F11942 /* Photos-Nature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E08613B1F09A2EC00B28E1B /* Photos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Photos; path = assets/Photos; sourceTree = "<group>"; };
 		7E1E6C851EF41BDD00BE87C6 /* CollectionViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollectionViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E1E6C891EF41BDD00BE87C6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7E1E6C921EF41BDD00BE87C6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -57,7 +58,6 @@
 		7EA587E61EFEDD5700F11942 /* RHParallaxScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RHParallaxScroller.h; path = source/RHParallaxScroller.h; sourceTree = "<group>"; };
 		7EA587E71EFEDD5700F11942 /* RHParallaxScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RHParallaxScroller.m; path = source/RHParallaxScroller.m; sourceTree = "<group>"; };
 		7EA587F71EFEDDD100F11942 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = assets/Assets.xcassets; sourceTree = "<group>"; };
-		7EA587F81EFEDDD100F11942 /* Photos-Nature */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Photos-Nature"; path = "assets/Photos-Nature"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,8 +169,8 @@
 		7EA587F61EFEDDBB00F11942 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				7E08613B1F09A2EC00B28E1B /* Photos */,
 				7EA587F71EFEDDD100F11942 /* Assets.xcassets */,
-				7EA587F81EFEDDD100F11942 /* Photos-Nature */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -237,8 +237,8 @@
 				7E1E6C981EF41BDD00BE87C6 /* LaunchScreen.storyboard in Resources */,
 				7EA587EE1EFEDD5700F11942 /* PhotoCollectionViewController.storyboard in Resources */,
 				7EA587F91EFEDDD100F11942 /* Assets.xcassets in Resources */,
+				7E08613C1F09A2EC00B28E1B /* Photos in Resources */,
 				7E1E6C931EF41BDD00BE87C6 /* Main.storyboard in Resources */,
-				7EA587FA1EFEDDD100F11942 /* Photos-Nature in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
