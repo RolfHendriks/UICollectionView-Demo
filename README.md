@@ -1,10 +1,6 @@
 # UICollectionView-Demo
 
-<!-- <img src="CollectionViewDemo/extras/video-full.gif" alt="CollectionView Demo"> -->
-<video alt="CollectionView Demo" controls>
-<source src="CollectionViewDemo/extras/video-full.mp4" type="video/mp4" />
-Your browser does not support the HTML video tag
-</video>
+<img src="https://user-images.githubusercontent.com/539554/27805115-aab2f11c-6000-11e7-961a-d471504b39ec.gif" alt="CollectionView Demo">
 
 ## Overview
 This is an advanced UICollectionView demo featuring a custom list layout and flexible grid layout. It demonstrates a wide variety of basic through advanced iOS techniques through a visually rich photo browsing demo. This project is intended as a tech demo to demonstrate iOS development techniques.
@@ -28,27 +24,27 @@ This is an advanced UICollectionView demo featuring a custom list layout and fle
 ### Problem
 The core feature of this demo is arranging photos in a grid or list layout. iOS's **UICollectionView** widget is very helpful this task, but it needed some customization to get the results I wanted. To see why, let's look at what happens if we use a UICollectionView to show a grid of 148px x148px thumbnails on an iPhone 6S+:
 
-<img width="414" height="736" src="CollectionViewDemo/extras/screenshot-collectionView.png" alt="UICollectionView layout"/>
-<img width="736" height="414"src="CollectionViewDemo/extras/screenshot-collectionView2.png" alt="UICollectionView layout - landscape"/>
+<img width="414" height="736" src="https://user-images.githubusercontent.com/539554/27805108-aa9feb8a-6000-11e7-8240-b26f3231a11b.png" alt="UICollectionView layout"/>
+<img width="736" height="414"src="https://user-images.githubusercontent.com/539554/27805109-aa9ff198-6000-11e7-8fba-42a08f5622b0.png" alt="UICollectionView layout - landscape"/>
 
 As you can see, UICollectionView's default behavior is to use flexible horizontal spacing between grid elements. I can't think of a reason why this would ever be the desired behavior. So:
 
 ### Solution
 I made **RHGridCollectionView** instead of using UICollectionView directly. RHCollectionView is built on top of UICollectionView, but is specialized for making better grid layouts. Given the same 148px x 148px iPhone 6 layout, RHGridCollectionView uses flexible horizontal margins instead of flexible horizontal spacing:
 
-<img width="414" height="736" src="CollectionViewDemo/extras/screenshot-grid-flexibleMargins.png" alt="RHGridCollectionView layout - flexible margins"/>
+<img width="414" height="736" src="https://user-images.githubusercontent.com/539554/27805113-aaa2bfb8-6000-11e7-9a11-dfcb2b3ad283.png" alt="RHGridCollectionView layout - flexible margins"/>
 
 This is a good layout, but it's not perfect yet because we are not using all of our horizontal screen space. So RHGridCollectionView adds support for **flexible grid layouts**:
 
-<img width="414" height="736" src="CollectionViewDemo/extras/screenshot-gridView.png" alt="grid layout"/>
-<img width="736" height="414" src="CollectionViewDemo/extras/screenshot-gridView2.png" alt="grid layout - landscape"/>
+<img width="414" height="736" src="https://user-images.githubusercontent.com/539554/27805112-aaa29d8a-6000-11e7-9358-e7263324e3e5.png" alt="grid layout"/>
+<img width="736" height="414" src="https://user-images.githubusercontent.com/539554/27805110-aaa01182-6000-11e7-997d-eff54b7fba12.png" alt="grid layout - landscape"/>
 
 With RHGridCollectionView, configuring this flexible layout requires just 3 lines of code, works on all devices, and automatically updates in response to screen orientation changes or any other content size changes. To maintain the square shape of each photo, RHGridCollectionView adds support to **preserve aspect ratios** when resizing cells. Without this option enabled, RHGridCollectionView would stretch cells horizontally but maintain a constant row height.
 
 Finally, there is the matter of switching to a list layout. I implemented this by adding support for **fixed column layouts** to RHGridCollectionView. With fixed column layouts, cells are automatically sized to fit a fixed number of columns. To implement a list layout, I just configured a grid layout with one column and no horizontal margin:
 
-<img width="414" height="736" src="CollectionViewDemo/extras/screenshot-list.png" alt="list layout"/>
-<img width="736" height="414" src="CollectionViewDemo/extras/screenshot-list2.png" alt="list layout - landscape"/>
+<img width="414" height="736" src="https://user-images.githubusercontent.com/539554/27805111-aaa197a0-6000-11e7-9767-4218e158f883.png" alt="list layout"/>
+<img width="736" height="414" src="https://user-images.githubusercontent.com/539554/27805114-aaae916c-6000-11e7-8623-ae455e55ea24.png" alt="list layout - landscape"/>
 
 Because this list layout is just a special kind of grid layout in RHGridCollectionView, we can seamlessly transition between grid and list layouts, even in the middle of a scroll.
 
@@ -57,14 +53,15 @@ Because this list layout is just a special kind of grid layout in RHGridCollecti
 
 This demo includes a subtle UI detail that makes a noticeable difference in the end result. While scrolling photos, the photo contents shift slightly to give a perception of depth. To illustrate, here is the parallax effect I use at double the usual intensity:
 
-<img src="CollectionViewDemo/extras/video-parallax.gif" alt="parallax" />
+<img src="https://user-images.githubusercontent.com/539554/27805118-aac0b766-6000-11e7-9fc4-07c45c1556ad.gif" alt="parallax" />
 
 This effect is from **RHParallaxScroller**, a simple utility with a single 15 line method that can implement this effect in lists / table views, grids / collection views, or any other scrolling view.
 
 
 ## Simulated Image Downloads + Multithreading
 
-<img src="CollectionViewDemo/extras/video-loading.gif" alt="loading"/>
+<img width="414" height="736" src="https://user-images.githubusercontent.com/539554/27805117-aab33b4a-6000-11e7-8fef-4769d7ce9f47.png" alt="loading"/>
+<img src="https://user-images.githubusercontent.com/539554/27805116-aab34950-6000-11e7-80ec-7252edf63e35.gif" alt="loading"/>
 
 ### Problem
 By far the most challenging part of this project was scrolling quickly through a photo gallery while each photo potentially spawns an image download on a separate thread. On top of typical multithreading challenges, multithreading with a collectionView is especially tricky. Collection views recycle old cells, potentially in the middle of a download. So, for example, if you have completed an image download for a cell, it is possible that the cell has been recycled and is being used for a different photo by the time the download completes.
@@ -84,11 +81,9 @@ A tempting alternative solution to threading complications might have been to ju
 
 ## Scrolling + Performance
 
-<img src="CollectionViewDemo/extras/video-scrolling.gif" alt="scrolling"/>
+<img src="https://user-images.githubusercontent.com/539554/27805119-aac36524-6000-11e7-9f67-b5f5d6ba7cef.gif" alt="scrolling"/>
 
-To appreciate what you are seeing in the above animation, keep in mind that we are looking at a gallery of full size camera photos - about 4 million pixels each - and that fast scrolling is silky smooth with a minimal memory footprint. Also keep in mind that this scrolling is twice as smooth on a real device - making a screen recording drops the frame rate from 60 to 30 frames per second.
-
-To get this level of performance required a few steps:
+To appreciate what you are seeing in the above animation, keep in mind that we are looking at a large gallery of full size camera photos - about 4 million pixels each - and that fast scrolling is silky smooth with a minimal memory footprint. To get this level of performance required a few steps:
 
 - Creating an efficient algorithm for cropping and resizing large images to only the size needed on screen. 
 - Doing all image loading asynchronously on a background thread
@@ -97,7 +92,7 @@ To get this level of performance required a few steps:
 
 The key part was to make an efficient algorithm for creating a small image from a large photo file without loading the entire photo into memory.
 
-Another important trick was to customize the UI treatment for loading an image from the disk cache instead of from a remote download. When loaded from disk, photos use a black square as a placeholder image while loading, then animate in the photo quickly. This is an example of one of my favorite tricks, which is to use animations to hide performance bottlenecks. This blank placeholder only shows up if you scroll very quickly, and is barely noticeable. Have you noticed it in the above animation? If you look very closely, you will see that some images are slightly darker as they scroll in from the far top of the screen. And if you still can't see the effect - that's exactly the point.
+Another important trick I used was to customize the UI treatment for loading an image that was already downloaded. When loaded from disk instead of downloaded, photos use a black square as a placeholder image while loading, then animate in the photo quickly. This is an example of one of my favorite tricks, which is to use animations to mask performance bottlenecks. This blank placeholder only shows up if you scroll very quickly, and is barely noticeable. Have you noticed it in the above animation? If you look very closely, you will see that some images are slightly darker as they scroll in from the far top of the screen. If you still can't see the effect - that's exactly the point.
 
 I use the same trick when autorotating or transitioning between list and grid views. The photo view fades to black, then a new view fades in. This is not just for visual flair, but to mask subtle split second delays from having to regenerate photos for a different size.
 
