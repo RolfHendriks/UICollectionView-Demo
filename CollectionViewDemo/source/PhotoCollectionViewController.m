@@ -104,6 +104,12 @@
     return self;
 }
 
+- (void) viewDidLoad
+{
+    [super viewDidLoad];
+    [self gridCollectionView].shouldPreserveFirstVisibleCell = YES;
+}
+
 - (void) viewDidAppear:(BOOL)animated
 {
     // automatically load image data when the screen appears. Deferring until
@@ -120,10 +126,33 @@
 
 
 
-#pragma mark <UICollectionViewDataSource>
+#pragma mark - UICollectionView Data Source + Delegate
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)sectio{
     return self.images.numberOfImages;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSLog(@"Loading cell for photo #%d", (int)indexPath.item );
+    
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[collectionView dequeueReusableCellWithReuseIdentifier:self.reuseIdentifier forIndexPath:indexPath];
+    
+    // update title
+    NSMutableDictionary* data = [self.images dataForImageAtIndex:indexPath.item];
+    NSString* title = data[kImageDataKeyTitle];
+    cell.title = title;
+    
+    // update image
+    [self updateImageForCell:cell atIndexPath:indexPath];
+    
+    // update parallax scrolling
+    if (self.maximumParallaxScroll > 0 )
+    {
+        [RHParallaxScroller updateContentView:cell.imageView inView:cell.contentView withScroll:self.collectionView maximumParallax:self.maximumParallaxScroll];
+    }
+
+    return cell;
 }
 
 - (void) updateImageForCell:(PhotoCollectionViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
@@ -176,29 +205,6 @@
         cell.needsDownload = NO;
     }
     cell.image = image;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSLog(@"Loading cell for photo #%d", (int)indexPath.item );
-    
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[collectionView dequeueReusableCellWithReuseIdentifier:self.reuseIdentifier forIndexPath:indexPath];
-    
-    // update title
-    NSMutableDictionary* data = [self.images dataForImageAtIndex:indexPath.item];
-    NSString* title = data[kImageDataKeyTitle];
-    cell.title = title;
-    
-    // update image
-    [self updateImageForCell:cell atIndexPath:indexPath];
-    
-    // update parallax scrolling
-    if (self.maximumParallaxScroll > 0 )
-    {
-        [RHParallaxScroller updateContentView:cell.imageView inView:cell.contentView withScroll:self.collectionView maximumParallax:self.maximumParallaxScroll];
-    }
-
-    return cell;
 }
 
 #define kPhotoCellHighlightTag 1
@@ -257,6 +263,11 @@
              cell.transform = CGAffineTransformIdentity;
          } completion:nil];
     }
+}
+
+- (void) scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    [[self gridCollectionView] scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
 }
 
 /*

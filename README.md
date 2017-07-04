@@ -12,6 +12,8 @@ This is an advanced UICollectionView demo featuring a custom list layout and fle
 - Simulated client/server architecture that abstracts away image downloads, enabling detailed testing of various synchronization issues that can occur when downloading multiple images at once
 - Performance optimized image caching to allow smooth scrolling through a gallery of full size (several megapixel) photos
 - Various UI polish details:
+  - Photos snap into positition when scrolling
+  - Photo gallery stays at the same photo when autorotating or switching layouts
   - Using NSAttributedString to outline text for increased legibility
   - Using animations to mask slight performance delays
   - Cross fading between images

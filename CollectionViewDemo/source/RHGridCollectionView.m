@@ -16,6 +16,8 @@
 @property (assign, nonatomic) BOOL shouldExpandCells;
 @property (assign, nonatomic) NSUInteger explicitColumnCount;
 
+@property (strong, nonatomic) NSIndexPath* firstVisibleIndexPath;
+
 @end
 
 @implementation RHGridCollectionView
@@ -40,6 +42,10 @@
 //
 - (void) setNeedsUpdate
 {
+    if (self.shouldPreserveFirstVisibleCell && !self.firstVisibleIndexPath)
+    {
+        self.firstVisibleIndexPath = [self findFirstVisibleIndexPath];
+    }
     [self updateLayout];
 }
 
@@ -79,6 +85,16 @@
     // Causes UICollectionView to change the position + size of existing cells, but not
     //  regenerate new cells. This is exactly what we want from a performance perspective.
     [layout invalidateLayout];
+    
+    
+    // Optional: preserve the topmost visible cell
+    if ( self.shouldPreserveFirstVisibleCell && self.firstVisibleIndexPath != nil )
+    {
+        CGFloat newOffset = [self scrollOffsetForIndexPath:self.firstVisibleIndexPath];
+        newOffset = [self contentOffsetForScrollOffset:newOffset];
+        self.contentOffset = CGPointMake(self.contentOffset.x, newOffset);
+        self.firstVisibleIndexPath = nil; // should only need to make this adjustment once. Plus, keeping firstVisibleIndexPath around is misleading because it will be out of date after scrolling.
+    }
 }
 
 #pragma mark - properties
@@ -198,6 +214,12 @@
 - (void) setFrame:(CGRect)frame
 {
     BOOL sizeChanged = !CGSizeEqualToSize(frame.size, self.frame.size);
+    if (sizeChanged && self.shouldPreserveFirstVisibleCell)
+    {
+        // Setting a new frame changes the topMost cell. So if we want to preserve the topmost
+        // cell, we need to find the value before changing the frame:
+        self.firstVisibleIndexPath = [self findFirstVisibleIndexPath];
+    }
     [super setFrame:frame];
     if (sizeChanged )
     {
@@ -214,6 +236,126 @@
 - (void) reloadItemsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths
 {
     [super reloadItemsAtIndexPaths:indexPaths];
+}
+
+/* 
+ SCROLLING CUSTOMIZATION:
+ - Snap to an exact multiple of a row height if dragging up or down
+ - maintain current photo index if changing interface orientation, and snap to multiple of row height
+*/
+
+- (CGFloat) offsetThatFits:(CGFloat)offset fromBottom:(BOOL)bottom
+{
+    CGFloat result = offset;
+    CGFloat cellHeight = [self actualCellSize].height;
+    CGFloat rowHeight = cellHeight + self.spacing.y;
+    NSInteger itemCount = [self numberOfItemsInSection:0];
+    NSInteger columnCount = [self columnCount];
+    NSInteger rowCount = itemCount / columnCount;
+    if ( itemCount % columnCount > 0 ) ++ rowCount;
+    
+    // ignore overlapping top bars when aligning rows.
+    // Scrolling to top has a scroll offset of -64 with a translucent top bar.
+    CGFloat offsetRelativeToTopLayoutGuide = offset + self.contentInset.top;
+    
+    // offset that snaps to top of view:
+    if (!bottom)
+    {
+        CGFloat topMargin = self.margins.top;
+        CGFloat offsetInRows = ( offsetRelativeToTopLayoutGuide - topMargin ) / rowHeight;
+        offsetInRows = round(offsetInRows);
+        if ( offsetInRows < 0 ) offsetInRows = 0;
+        else if ( offsetInRows >= rowCount ) offsetInRows = rowCount - 1;
+        
+        CGFloat y = topMargin + offsetInRows * rowHeight; // offset so that top of target row is at the top of the scroll view
+        y -= offsetInRows == 0 ? topMargin : self.spacing.y; // include vertical margin
+        y -= self.contentInset.top;
+        result = y;
+    }
+    // offset that snaps to bottom of view:
+    else
+    {
+        // do all math in terms of scroll offset from the bottom of the view
+        CGFloat bottomMargin = self.margins.bottom;
+        CGFloat maximumOffset = self.contentSize.height - self.bounds.size.height;
+        CGFloat offsetFromBottom = maximumOffset - offsetRelativeToTopLayoutGuide;
+        CGFloat offsetInRows = ( offsetFromBottom - bottomMargin ) / rowHeight;
+        offsetInRows = round(offsetInRows);
+        if ( offsetInRows < 0 ) offsetInRows = 0;
+        else if ( offsetInRows >= rowCount ) offsetInRows = rowCount - 1;
+        
+        offsetFromBottom = bottomMargin + offsetInRows * rowHeight;
+        offsetFromBottom -= offsetInRows == 0 ? bottomMargin : self.spacing.y;
+        offsetFromBottom -= self.contentInset.bottom;
+        
+        // convert bottom offset back into offset from top
+        result = maximumOffset - offsetFromBottom;
+    }
+    
+    return result;
+}
+
+- (NSIndexPath*) findFirstVisibleIndexPath
+{
+    NSArray<NSIndexPath*>* visibleIndexPaths = self.indexPathsForVisibleItems;
+    NSIndexPath* result = nil;
+    for ( NSIndexPath* indexPath in visibleIndexPaths )
+    {
+        if (result == nil || (indexPath.section <= result.section && indexPath.row < result.row ) )
+        {
+            // create a user-facing definition of what a 'visible' cell is. To iOS, any cell that is partially
+            // or fully onscreen is visible. This includes, for example, a cell that is behind the navigation
+            // bar and almost all the way off the top edge of the screen.
+            
+            // to us, let's say a 'visible' cell is one that is less than halfway obscured by the navigation
+            // bar or top edge of the screen:
+            CGRect frame = [self layoutAttributesForItemAtIndexPath:indexPath].frame;
+            CGFloat topLayoutGuidePosition = self.contentOffset.y + self.contentInset.top;
+            if (CGRectGetMidY(frame) >= topLayoutGuidePosition)
+            {
+                result = indexPath;
+            }
+        }
+    }
+    return result;
+}
+
+- (CGFloat) scrollOffsetForIndexPath:(NSIndexPath*)indexPath
+{
+    UICollectionViewLayoutAttributes* layout = [self layoutAttributesForItemAtIndexPath:indexPath];
+    CGFloat result = layout.frame.origin.y; // scrolling so that item's top is at the grid view's top border
+    result -= indexPath.item == 0 ? self.margins.top : self.spacing.y; // leave room for margin / spacing
+    return result;
+}
+
+// With a translucent top bar, scrolling to top has a y offset of
+// -64px, not zero. To get around this, we define scroll offsets to
+// do our math as if there were no bar. We then convert to content
+// offsets, which factor in the overlapping bar.
+- (CGFloat) contentOffsetForScrollOffset:(CGFloat)scrollOffset
+{
+    return scrollOffset - self.contentInset.top;
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    // judgement call: don't snap to nearest cell unless scroll view is going to decelerate
+    if (velocity.y == 0) return;
+    
+    // don't override behavior if scrolling past endpoints - we want to keep
+    //  iOS's bounce behavior.
+    CGFloat maximumContentOffset = scrollView.contentSize.height - scrollView.bounds.size.height;
+    
+    if ( targetContentOffset != nil && maximumContentOffset > 0 && targetContentOffset->y > 0 && targetContentOffset->y < maximumContentOffset )
+    {
+        // indexPathForItemAtPoint: combined with layoutAttributesForItemAtIndexPath
+        // seems like a good way to query for the correct target offset, but does not
+        // work because indexPathForItemAtPoint: returns nil. We could likely fix this by
+        // defining a UICollectionViewLayout subclass for grid layouts, but this seems
+        // like overkill. Instead, let's compute the target offset manually:
+        CGFloat y = [self offsetThatFits:targetContentOffset->y fromBottom:NO];
+        targetContentOffset->y = y;
+    }
 }
 
 @end

@@ -18,7 +18,7 @@
     all space not used by margins and inter item spacing.
  */
 
-@interface RHGridCollectionView : UICollectionView
+@interface RHGridCollectionView : UICollectionView <UIScrollViewDelegate>
 
 
 /**
@@ -40,6 +40,12 @@
 @property (readonly, nonatomic) CGSize preferredCellSize;
 @property (readonly, nonatomic) CGPoint spacing;
 @property (readonly, nonatomic) UIEdgeInsets margins;
+
+/**
+ If set, the index of the first/topmost visible cell will remain the same when 
+ layout changes. This generally matches user expectations and is recommended.
+ */
+@property (assign, nonatomic) BOOL shouldPreserveFirstVisibleCell;
 
 
 // optionally use flexible cell sizes instead of the default layout:
@@ -68,5 +74,13 @@
  configuration.
  */
 - (void) configureForFixedCellSize;
+
+
+/** 
+ Ensures that scrolling automatically snaps to visible cells. Need to call this from within your 
+ collectionViewDelegate. Since collection view delegates are also scroll view delegates, RHGridCollectionView cannot
+ respond to scrolling events when its collectionViewDelegate is set.
+*/
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 
 @end
